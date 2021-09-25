@@ -5,6 +5,7 @@ class HttpException extends Error {
   constructor({ message, statusCode, ...rest }) {
     super(message || 'Http Exception');
     this.statusCode = statusCode;
+    this.message = message;
 
     Object.entries(rest).forEach(([key, value]) => {
       this[key] = value;

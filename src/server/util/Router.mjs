@@ -1,6 +1,7 @@
 import { Router as ExpressRouter } from 'express';
 import invariant from '../../util/invariant.mjs';
 import createValidator from './createValidator.mjs';
+import { HTTP_METHODS } from './constants.mjs';
 
 class Router {
   path;
@@ -10,12 +11,6 @@ class Router {
     invariant(path && path.startsWith('/'));
 
     this.path = path;
-
-    this.configure();
-  }
-
-  configure() {
-    throw new Error('not implemented');
   }
 
   #wrapHandler(handler) {
@@ -23,24 +18,30 @@ class Router {
       Promise.resolve(handler(req, res, next)).catch(next);
   }
 
+  #createValidator(prop) {
+    return options => {
+      const validate = createValidator(options);
+
+      return (req, res, next) => {
+        try {
+          validate(req[prop]);
+          next();
+        } catch (e) {
+          next(e);
+        }
+      };
+    };
+  }
+
   addRoute(method, path, ...handlers) {
-    invariant(['get', 'post', 'patch', 'delete'].includes(method));
+    invariant(HTTP_METHODS.includes(method));
 
     this.router[method](path, handlers.map(this.#wrapHandler));
   }
 
-  withQueryValidator(options) {
-    const validate = createValidator(options);
+  withQueryValidator = this.#createValidator('query');
 
-    return (req, res, next) => {
-      try {
-        validate(req.query);
-        next();
-      } catch (e) {
-        next(e);
-      }
-    };
-  }
+  withBodyValidator = this.#createValidator('body');
 }
 
 export default Router;

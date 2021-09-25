@@ -3,6 +3,7 @@ import loggerMiddleware from './middlewares/loggerMiddleware.mjs';
 import errorHandlerMiddleware from './middlewares/errorHandlerMiddleware.mjs';
 import invariant from '../util/invariant.mjs';
 import NotFoundException from './exceptions/NotFoundException.mjs';
+import { HTTP_METHODS } from './util/constants.mjs';
 
 class Server {
   #port;
@@ -26,8 +27,14 @@ class Server {
       this.#app.use(this.#path + path, router);
     });
 
-    this.#app.get('*', function (req, res, next) {
-      next(new NotFoundException());
+    this.#addNotFoundRoutes();
+  }
+
+  #addNotFoundRoutes() {
+    HTTP_METHODS.forEach(method => {
+      this.#app[method]('*', function (req, res, next) {
+        next(new NotFoundException());
+      });
     });
   }
 

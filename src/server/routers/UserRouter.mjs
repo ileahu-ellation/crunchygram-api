@@ -1,12 +1,15 @@
 import Router from '../util/Router.mjs';
 import * as User from '../../db/entities/User.mjs';
+import { POST } from '../util/constants.mjs';
 
 class UserRouter extends Router {
-  configure() {
+  constructor(props) {
+    super(props);
+
     this.addRoute(
-      'get',
+      POST,
       '/auth',
-      this.withQueryValidator({
+      this.withBodyValidator({
         username: [
           {
             check: value => value.length >= 3,
@@ -23,8 +26,8 @@ class UserRouter extends Router {
     );
   }
 
-  auth(req, res, next) {
-    const { username } = req.query;
+  async auth(req, res) {
+    const { username } = req.body;
 
     res.send({
       username,
