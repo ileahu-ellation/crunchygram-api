@@ -1,9 +1,9 @@
 import express from 'express';
-import loggerMiddleware from './middlewares/loggerMiddleware.mjs';
-import errorHandlerMiddleware from './middlewares/errorHandlerMiddleware.mjs';
-import invariant from '../util/invariant.mjs';
-import NotFoundException from './exceptions/NotFoundException.mjs';
-import { HTTP_METHODS } from './util/constants.mjs';
+import loggerMiddleware from './middlewares/loggerMiddleware.js';
+import errorHandlerMiddleware from './middlewares/errorHandlerMiddleware.js';
+import invariant from '../util/invariant.js';
+import NotFoundException from './exceptions/NotFoundException.js';
+import { HTTP_METHODS } from './util/constants.js';
 
 class Server {
   #port;

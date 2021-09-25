@@ -1,4 +1,4 @@
-import LowDB from '../index.mjs';
+import LowDB from '../index.js';
 
 const list = () => LowDB.getEntityInstance('users');
 

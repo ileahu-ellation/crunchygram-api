@@ -1,6 +1,7 @@
-import Router from '../util/Router.mjs';
-import * as User from '../../db/entities/User.mjs';
-import { POST } from '../util/constants.mjs';
+import Router from '../util/Router.js';
+import * as User from '../../db/entities/User.js';
+import { POST } from '../util/constants.js';
+import sample from '../../util/sample.js';
 
 class UserRouter extends Router {
   constructor(props) {
@@ -28,10 +29,9 @@ class UserRouter extends Router {
 
   async auth(req, res) {
     const { username } = req.body;
+    const data = { username };
 
-    res.send({
-      username,
-    });
+    res.send(data);
   }
 }
 

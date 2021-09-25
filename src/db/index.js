@@ -6,7 +6,11 @@ class LowDB {
   static db;
 
   constructor({ filename }) {
-    const file = join(dirname(fileURLToPath(import.meta.url)), '../..', filename);
+    const file = join(
+      dirname(fileURLToPath(import.meta.url)),
+      '../..',
+      filename,
+    );
     const adapter = new JSONFile(file);
 
     LowDB.db = new Low(adapter);

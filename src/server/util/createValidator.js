@@ -1,4 +1,4 @@
-import BadRequestException from '../exceptions/BadRequestException.mjs';
+import BadRequestException from '../exceptions/BadRequestException.js';
 
 const createValidator = options => {
   return data => {

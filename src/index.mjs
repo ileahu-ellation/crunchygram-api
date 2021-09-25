@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
-import Server from './server/index.mjs';
-import UserRouter from './server/routers/UserRouter.mjs';
-import LowDB from './db/index.mjs';
+import Server from './server/index.js';
+import UserRouter from './server/routers/UserRouter.js';
+import LowDB from './db/index.js';
 
 dotenv.config();
 

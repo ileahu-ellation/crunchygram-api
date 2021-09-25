@@ -1,7 +1,7 @@
 import { Router as ExpressRouter } from 'express';
-import invariant from '../../util/invariant.mjs';
-import createValidator from './createValidator.mjs';
-import { HTTP_METHODS } from './constants.mjs';
+import invariant from '../../util/invariant.js';
+import createValidator from './createValidator.js';
+import { HTTP_METHODS } from './constants.js';
 
 class Router {
   path;
