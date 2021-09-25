@@ -1,6 +1,7 @@
 import Router from '../util/Router.js';
 import * as User from '../../db/entities/User.js';
 import { POST } from '../util/constants.js';
+import avatars from '../../constants/avatars.js';
 import sample from '../../util/sample.js';
 
 class UserRouter extends Router {
@@ -29,7 +30,8 @@ class UserRouter extends Router {
 
   async auth(req, res) {
     const { username } = req.body;
-    const data = { username };
+    const avatar = sample(avatars);
+    const data = { username, avatar };
 
     res.send(data);
   }
