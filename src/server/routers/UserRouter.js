@@ -3,6 +3,7 @@ import * as User from '../../db/entities/User.js';
 import { POST } from '../util/constants.js';
 import avatars from '../../constants/avatars.js';
 import sample from '../../util/sample.js';
+import { lte, length, compose } from 'ramda';
 
 class UserRouter extends Router {
   constructor(props) {
@@ -14,12 +15,11 @@ class UserRouter extends Router {
       this.withBodyValidator({
         username: [
           {
-            check: value => value.length >= 3,
+            check: compose(lte(3), length),
             message: () => 'length must be at least 3 characters',
           },
           {
-            check: value =>
-              !User.list().find(({ username }) => username === value),
+            check: username => !User.list({ username }),
             message: value => `username "${value}" already exists`,
           },
         ],
@@ -33,7 +33,9 @@ class UserRouter extends Router {
     const avatar = sample(avatars);
     const data = { username, avatar };
 
-    res.send(data);
+    const result = await User.create(data);
+
+    res.send(result);
   }
 }
 
