@@ -2,6 +2,8 @@ import dotenv from 'dotenv';
 import Server from './server/index.js';
 import UserRouter from './server/routers/UserRouter.js';
 import LowDB from './db/index.js';
+import users from './constants/users.js';
+import posts from './constants/posts.js';
 
 dotenv.config();
 
@@ -14,6 +16,12 @@ dotenv.config();
   });
   const lowDB = new LowDB({
     filename: process.env.LOW_DB_FILEPATH,
+    defaults: {
+      users,
+      posts,
+      comments: [],
+      likes: [],
+    },
   });
 
   await lowDB.setup();

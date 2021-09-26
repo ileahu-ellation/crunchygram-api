@@ -1,8 +1,9 @@
-import randomID from '../../util/randomID.js';
+import randomID from './randomID.js';
 import LowDB from '../index.js';
 
 class Entity {
   entity;
+  defaults = [];
 
   instance() {
     return LowDB.getEntityInstance(this.entity);

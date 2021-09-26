@@ -4,8 +4,10 @@ import { Low, JSONFile } from 'lowdb';
 
 class LowDB {
   static db;
+  #defaults;
 
-  constructor({ filename }) {
+  constructor({ filename, defaults }) {
+    this.#defaults = defaults;
     const file = join(
       dirname(fileURLToPath(import.meta.url)),
       '../..',
@@ -16,12 +18,15 @@ class LowDB {
     LowDB.db = new Low(adapter);
   }
 
-  #prepare() {
-    LowDB.db.data = LowDB.db.data || {
-      users: [],
-      posts: [],
-      comments: [],
-    };
+  async #prepare() {
+    const data = LowDB.db.data;
+    if (!data) {
+      console.log('creating data');
+      LowDB.db.data = this.#defaults;
+      await LowDB.db.write();
+    } else {
+      console.log('reading data');
+    }
   }
 
   static getEntityInstance(name) {
@@ -31,7 +36,7 @@ class LowDB {
   async setup() {
     await LowDB.db.read();
 
-    this.#prepare();
+    await this.#prepare();
   }
 }
 
