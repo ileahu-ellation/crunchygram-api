@@ -1,9 +1,9 @@
+import { lte, length, compose, propEq, includes, prop } from 'ramda';
 import Router from '../util/Router.js';
-import * as User from '../../db/entities/User.js';
-import { POST } from '../util/constants.js';
+import User from '../../db/entities/User.js';
+import { GET, POST } from '../util/constants.js';
 import avatars from '../../constants/avatars.js';
 import sample from '../../util/sample.js';
-import { lte, length, compose } from 'ramda';
 
 class UserRouter extends Router {
   constructor(props) {
@@ -19,12 +19,26 @@ class UserRouter extends Router {
             message: () => 'length must be at least 3 characters',
           },
           {
-            check: username => !User.list({ username }),
+            check: value => !User.find(propEq('username', value)),
             message: value => `username "${value}" already exists`,
           },
         ],
       }),
       this.auth,
+    );
+
+    this.addRoute(
+      GET,
+      '',
+      this.withQueryValidator({
+        username: [
+          {
+            check: value => !value || typeof value === 'string',
+            message: () => 'username prop must be a string',
+          },
+        ],
+      }),
+      this.list,
     );
   }
 
@@ -36,6 +50,17 @@ class UserRouter extends Router {
     const result = await User.create(data);
 
     res.send(result);
+  }
+
+  async list(req, res) {
+    const { username } = req.query;
+    const data = await User.list();
+
+    if (!username) {
+      return res.send(data);
+    }
+
+    res.send(data.filter(compose(includes(username), prop('username'))));
   }
 }
 
