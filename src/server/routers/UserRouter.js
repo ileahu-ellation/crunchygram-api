@@ -4,6 +4,7 @@ import User from '../../db/entities/User.js';
 import { GET, POST } from '../util/constants.js';
 import avatars from '../../constants/avatars.js';
 import sample from '../../util/sample.js';
+import { bodyValidatorMiddleware } from '../middlewares/validatorMiddleware.js';
 
 class UserRouter extends Router {
   constructor(props) {
@@ -12,7 +13,7 @@ class UserRouter extends Router {
     this.addRoute(
       POST,
       '/auth',
-      this.withBodyValidator({
+      bodyValidatorMiddleware({
         username: [
           {
             check: compose(lte(3), length),
@@ -27,19 +28,7 @@ class UserRouter extends Router {
       this.auth,
     );
 
-    this.addRoute(
-      GET,
-      '',
-      this.withQueryValidator({
-        username: [
-          {
-            check: value => !value || typeof value === 'string',
-            message: () => 'username prop must be a string',
-          },
-        ],
-      }),
-      this.list,
-    );
+    this.addRoute(GET, '', this.list);
   }
 
   async auth(req, res) {
