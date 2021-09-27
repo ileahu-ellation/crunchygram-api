@@ -17,11 +17,11 @@ class LikeRouter extends Router {
       bodyValidatorMiddleware({
         postId: [
           {
-            check: compose(lte(3), length),
-            message: () => 'length must be at least 3 characters',
+            check: Boolean,
+            message: () => 'required value',
           },
           {
-            check: value => !Post.find(propEq('id', value)),
+            check: value => Post.find(propEq('id', value)),
             message: value => `post with id "${value}" does not exist`,
           },
         ],

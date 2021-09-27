@@ -5,6 +5,12 @@ import { compose, not, propEq } from 'ramda';
 class Entity {
   entity;
 
+  constructor() {
+    ['list', 'instance', 'create', 'delete'].forEach(key => {
+      this[key] = this[key].bind(this);
+    });
+  }
+
   instance() {
     return LowDB.getEntityInstance(this.entity);
   }
