@@ -6,14 +6,13 @@ class Like extends Entity {
   entity = 'likes';
 
   async toggle({ username, postId }) {
-    const { id: userId } = User.find(propEq('username', username));
     const selector = allPass([
-      propEq('userId', userId),
+      propEq('username', username),
       propEq('postId', postId),
     ]);
 
     const existingLike = this.find(
-      allPass([propEq('userId', userId), propEq('postId', postId)]),
+      allPass([propEq('username', username), propEq('postId', postId)]),
     );
 
     if (existingLike) {
@@ -23,7 +22,7 @@ class Like extends Entity {
     }
 
     return super.create({
-      userId,
+      username,
       postId,
     });
   }
