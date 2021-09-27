@@ -1,9 +1,9 @@
 import dotenv from 'dotenv';
 import Server from './server/index.js';
 import UserRouter from './server/routers/UserRouter.js';
+import LikeRouter from './server/routers/LikeRouter.js';
 import LowDB from './db/index.js';
-import users from './constants/users.js';
-import posts from './constants/posts.js';
+import dbDefaults from './dbDefaults.js';
 
 dotenv.config();
 
@@ -12,16 +12,14 @@ dotenv.config();
   const server = new Server({
     port,
     path: '/api',
-    routers: [new UserRouter({ path: '/user' })],
+    routers: [
+      new UserRouter({ path: '/user' }),
+      new LikeRouter({ path: '/like' }),
+    ],
   });
   const lowDB = new LowDB({
     filename: process.env.LOW_DB_FILEPATH,
-    defaults: {
-      users,
-      posts,
-      comments: [],
-      likes: [],
-    },
+    defaults: dbDefaults,
   });
 
   await lowDB.setup();

@@ -33,6 +33,12 @@ class LowDB {
     return LowDB.db.data[name];
   }
 
+  static async setEntityData(name, value) {
+    LowDB.db.data[name] = value;
+
+    await LowDB.db.write();
+  }
+
   async setup() {
     await LowDB.db.read();
 

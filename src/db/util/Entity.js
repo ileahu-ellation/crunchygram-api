@@ -1,9 +1,9 @@
 import randomID from './randomID.js';
 import LowDB from '../index.js';
+import { compose, not, propEq } from 'ramda';
 
 class Entity {
   entity;
-  defaults = [];
 
   instance() {
     return LowDB.getEntityInstance(this.entity);
@@ -34,6 +34,12 @@ class Entity {
     await LowDB.db.write();
 
     return data;
+  }
+
+  async delete(predicate) {
+    const data = this.instance().filter(compose(not, predicate));
+
+    await LowDB.setEntityData(this.entity, data);
   }
 }
 
