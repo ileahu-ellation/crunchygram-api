@@ -1,13 +1,12 @@
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { JSONFile, Low } from 'lowdb';
+import getDefaultDbData from './util/dbDefaults.js';
 
 class LowDB {
   static db;
-  #defaults;
 
-  constructor({ filename, defaults }) {
-    this.#defaults = defaults;
+  constructor({ filename }) {
     const file = join(
       dirname(fileURLToPath(import.meta.url)),
       '../..',
@@ -22,7 +21,7 @@ class LowDB {
     const data = LowDB.db.data;
     if (!data) {
       console.log('creating data');
-      LowDB.db.data = this.#defaults;
+      LowDB.db.data = await getDefaultDbData();
       await LowDB.db.write();
     } else {
       console.log('reading data');

@@ -4,7 +4,6 @@ import UserRouter from './server/routers/UserRouter.js';
 import LikeRouter from './server/routers/LikeRouter.js';
 import PostRouter from './server/routers/PostRouter.js';
 import LowDB from './db/index.js';
-import dbDefaults from './dbDefaults.js';
 
 dotenv.config();
 
@@ -21,7 +20,6 @@ dotenv.config();
   });
   const lowDB = new LowDB({
     filename: process.env.LOW_DB_FILEPATH,
-    defaults: dbDefaults,
   });
 
   await lowDB.setup();
