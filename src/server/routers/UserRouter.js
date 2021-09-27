@@ -5,6 +5,7 @@ import { GET, POST } from '../util/constants.js';
 import avatars from '../../constants/avatars.js';
 import sample from '../../util/sample.js';
 import { bodyValidatorMiddleware } from '../middlewares/validatorMiddleware.js';
+import requireAuthMiddleware from '../middlewares/authenticationMiddleware.js';
 
 class UserRouter extends Router {
   constructor(props) {
@@ -19,26 +20,37 @@ class UserRouter extends Router {
             check: compose(lte(3), length),
             message: () => 'length must be at least 3 characters',
           },
-          {
-            check: value => !User.find(propEq('username', value)),
-            message: value => `username "${value}" already exists`,
-          },
         ],
       }),
       this.auth,
     );
 
-    this.addRoute(GET, '', this.list);
+    this.addRoute(GET, '', requireAuthMiddleware(), this.list);
+    this.addRoute(GET, '/logout', this.logout);
   }
 
   async auth(req, res) {
     const { username } = req.body;
+
+    const existingUser = User.find(propEq('username', username));
+
+    if (existingUser) {
+      req.session.username = username;
+      res.send(existingUser);
+
+      return;
+    }
+
     const avatar = sample(avatars);
     const data = { username, avatar };
+    const newUser = await User.create(data);
 
-    const result = await User.create(data);
+    res.send(newUser);
+  }
 
-    res.send(result);
+  async logout(req, res) {
+    delete req.session.username;
+    res.status(201).send();
   }
 
   async list(req, res) {
@@ -46,7 +58,9 @@ class UserRouter extends Router {
     const data = await User.list();
 
     if (!username) {
-      return res.send(data);
+      res.send(data);
+
+      return;
     }
 
     res.send(data.filter(compose(includes(username), prop('username'))));
