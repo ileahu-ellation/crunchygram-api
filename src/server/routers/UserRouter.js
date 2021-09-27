@@ -2,8 +2,6 @@ import { lte, length, compose, propEq, includes, prop } from 'ramda';
 import Router from '../util/Router.js';
 import User from '../../db/entities/User.js';
 import { GET, POST } from '../util/constants.js';
-import avatars from '../../constants/avatars.js';
-import sample from '../../util/sample.js';
 import { bodyValidatorMiddleware } from '../middlewares/validatorMiddleware.js';
 import requireAuthMiddleware from '../middlewares/authenticationMiddleware.js';
 
@@ -41,9 +39,7 @@ class UserRouter extends Router {
       return;
     }
 
-    const avatar = sample(avatars);
-    const data = { username, avatar };
-    const newUser = await User.create(data);
+    const newUser = await User.create({ username });
 
     res.send(newUser);
   }
