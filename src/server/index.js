@@ -1,6 +1,7 @@
 import express from 'express';
 import loggerMiddleware from './middlewares/loggerMiddleware.js';
 import errorHandlerMiddleware from './middlewares/errorHandlerMiddleware.js';
+import cookieSessionMiddleware from './middlewares/cookieSessionMiddleware.js';
 import invariant from '../util/invariant.js';
 import NotFoundException from './exceptions/NotFoundException.js';
 import { HTTP_METHODS } from './util/constants.js';
@@ -17,6 +18,7 @@ class Server {
     this.#port = port;
     this.#path = path;
 
+    this.addMiddleware(cookieSessionMiddleware());
     this.addMiddleware(loggerMiddleware());
     this.addMiddleware(express.json());
     this.#addRouters(routers);
