@@ -11,7 +11,7 @@ class UserRouter extends Router {
 
     this.addRoute(
       POST,
-      '/auth',
+      '/login',
       bodyValidatorMiddleware({
         username: [
           {
@@ -20,7 +20,7 @@ class UserRouter extends Router {
           },
         ],
       }),
-      this.auth,
+      this.login,
     );
 
     this.addRoute(GET, '', requireAuthMiddleware(), this.list);
@@ -28,13 +28,13 @@ class UserRouter extends Router {
   }
 
   /**
-   * POST /api/user/auth
+   * POST /api/user/login
    * @summary Authentication/create account
    * @param {string} username.form.required - username to login/register with
    * @tags user
    * @return {User} 200 - success response - application/json
    */
-  async auth(req, res) {
+  async login(req, res) {
     const { username } = req.body;
 
     const existingUser = User.find(propEq('username', username));
