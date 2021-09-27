@@ -15,5 +15,10 @@ const createValidatorMiddleware = prop => options => {
 
 const queryValidatorMiddleware = createValidatorMiddleware('query');
 const bodyValidatorMiddleware = createValidatorMiddleware('body');
+const paramsValidatorMiddleware = createValidatorMiddleware('params');
 
-export { queryValidatorMiddleware, bodyValidatorMiddleware };
+export {
+  queryValidatorMiddleware,
+  bodyValidatorMiddleware,
+  paramsValidatorMiddleware,
+};

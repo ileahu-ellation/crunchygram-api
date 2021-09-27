@@ -1,9 +1,9 @@
-import { lte, length, compose, includes, prop, propEq, allPass } from 'ramda';
+import { propEq } from 'ramda';
 import Router from '../util/Router.js';
 import Like from '../../db/entities/Like.js';
 import Post from '../../db/entities/Post.js';
 import { POST } from '../util/constants.js';
-import { bodyValidatorMiddleware } from '../middlewares/validatorMiddleware.js';
+import { paramsValidatorMiddleware } from '../middlewares/validatorMiddleware.js';
 import requireAuthMiddleware from '../middlewares/authenticationMiddleware.js';
 
 class LikeRouter extends Router {
@@ -12,9 +12,9 @@ class LikeRouter extends Router {
 
     this.addRoute(
       POST,
-      '/toggle',
+      '/toggle/:postId',
       requireAuthMiddleware(),
-      bodyValidatorMiddleware({
+      paramsValidatorMiddleware({
         postId: [
           {
             check: Boolean,
@@ -31,7 +31,7 @@ class LikeRouter extends Router {
   }
 
   async toggle(req, res) {
-    const { postId } = req.body;
+    const { postId } = req.params;
     const { username } = req.session;
 
     const like = await Like.toggle({ username, postId });
