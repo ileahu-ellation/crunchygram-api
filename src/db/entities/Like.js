@@ -1,7 +1,13 @@
 import Entity from '../util/Entity.js';
-import User from './User.js';
 import { allPass, propEq } from 'ramda';
 
+/**
+ * Like type
+ * @typedef {object} Like
+ * @property {string} id
+ * @property {string} username
+ * @property {string} postId
+ */
 class Like extends Entity {
   entity = 'likes';
 

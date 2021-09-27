@@ -5,6 +5,7 @@ import cookieSessionMiddleware from './middlewares/cookieSessionMiddleware.js';
 import invariant from '../util/invariant.js';
 import NotFoundException from './exceptions/NotFoundException.js';
 import { HTTP_METHODS } from './util/constants.js';
+import docs from '../docs/index.js';
 
 class Server {
   #port;
@@ -17,6 +18,8 @@ class Server {
 
     this.#port = port;
     this.#path = path;
+
+    docs(this.#app);
 
     this.addMiddleware(cookieSessionMiddleware());
     this.addMiddleware(loggerMiddleware());

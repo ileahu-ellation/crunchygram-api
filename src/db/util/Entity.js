@@ -1,6 +1,6 @@
 import randomID from './randomID.js';
 import LowDB from '../index.js';
-import { compose, not, propEq } from 'ramda';
+import { compose, not } from 'ramda';
 
 class Entity {
   entity;

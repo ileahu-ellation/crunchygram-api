@@ -1,18 +1,20 @@
 import {
-  when,
-  identity,
-  not,
-  compose,
-  trim,
   always,
+  compose,
   filter,
-  prop,
-  toLower,
+  identity,
   includes,
+  not,
+  prop,
+  propEq,
   slice,
+  toLower,
+  trim,
+  when,
 } from 'ramda';
 import Router from '../util/Router.js';
 import Post from '../../db/entities/Post.js';
+import Like from '../../db/entities/Like.js';
 import { GET } from '../util/constants.js';
 import requireAuthMiddleware from '../middlewares/authenticationMiddleware.js';
 import { queryValidatorMiddleware } from '../middlewares/validatorMiddleware.js';
@@ -47,8 +49,18 @@ class PostRouter extends Router {
       }),
       this.list,
     );
+    this.addRoute(GET, '/liked', this.liked);
   }
 
+  /**
+   * GET /api/post
+   * @summary List posts
+   * @param {string} start.query - default 0
+   * @param {string} limit.query - default 10
+   * @param {string} search.query - name to search by
+   * @tags post
+   * @return {array<Post>} 200 - success response - application/json
+   */
   async list(req, res) {
     const { limit = 10, start = 0, search = '' } = req.query;
 
@@ -60,6 +72,23 @@ class PostRouter extends Router {
       ),
       Post.list,
     )();
+
+    res.send(posts);
+  }
+
+  /**
+   * GET /api/post/liked
+   * @summary Current user's liked posts
+   * @tags post
+   * @return {array<Post>} 200 - success response - application/json
+   */
+  async liked(req, res) {
+    const { username } = req.session;
+
+    const likedPostIds = Like.list(propEq('username', username)).map(
+      prop('postId'),
+    );
+    const posts = Post.list(({ id }) => likedPostIds.includes(id));
 
     res.send(posts);
   }

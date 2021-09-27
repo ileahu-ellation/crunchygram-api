@@ -1,6 +1,6 @@
-import { join, dirname } from 'path';
+import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
-import { Low, JSONFile } from 'lowdb';
+import { JSONFile, Low } from 'lowdb';
 
 class LowDB {
   static db;

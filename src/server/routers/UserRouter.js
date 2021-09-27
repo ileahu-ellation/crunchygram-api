@@ -1,4 +1,4 @@
-import { lte, length, compose, propEq, includes, prop } from 'ramda';
+import { compose, includes, length, lte, prop, propEq } from 'ramda';
 import Router from '../util/Router.js';
 import User from '../../db/entities/User.js';
 import { GET, POST } from '../util/constants.js';
@@ -27,6 +27,13 @@ class UserRouter extends Router {
     this.addRoute(GET, '/logout', this.logout);
   }
 
+  /**
+   * POST /api/user/auth
+   * @summary Authentication/create account
+   * @param {string} username.form.required - username to login/register with
+   * @tags user
+   * @return {User} 200 - success response - application/json
+   */
   async auth(req, res) {
     const { username } = req.body;
 
@@ -44,11 +51,23 @@ class UserRouter extends Router {
     res.send(newUser);
   }
 
+  /**
+   * GET /api/user/logout
+   * @summary Logout
+   * @tags user
+   * @return {string} 201 - success response - application/json
+   */
   async logout(req, res) {
     delete req.session.username;
     res.status(201).send();
   }
 
+  /**
+   * GET /api/user
+   * @summary List users
+   * @tags user
+   * @return {User} 200 - success response - application/json
+   */
   async list(req, res) {
     const { username } = req.query;
     const data = await User.list();
