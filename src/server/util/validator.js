@@ -34,4 +34,9 @@ const numberValidator = {
   message: () => 'must be a number',
 };
 
-export { createValidator, numberValidator };
+const requiredValueValidator = {
+  check: Boolean,
+  message: () => 'required value',
+};
+
+export { createValidator, numberValidator, requiredValueValidator };
