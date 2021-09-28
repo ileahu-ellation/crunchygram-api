@@ -2,6 +2,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import loggerMiddleware from './middlewares/loggerMiddleware.js';
 import errorHandlerMiddleware from './middlewares/errorHandlerMiddleware.js';
+import accessControlMiddleware from './middlewares/accessControlMiddleware.js';
 import invariant from '../util/invariant.js';
 import NotFoundException from './exceptions/NotFoundException.js';
 import { HTTP_METHODS } from './util/constants.js';
@@ -22,21 +23,12 @@ class Server {
     docs(this.#app);
 
     this.#app.set('trust proxy', 1);
-    this.addMiddleware((req, res, next) => {
-      const { origin } = req.headers;
-
-      if (origin) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
-      }
-      res.header('Access-Control-Allow-Methods', 'GET, OPTIONS, POST');
-      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-      res.header('Access-Control-Allow-Credentials', true);
-      return next();
-    });
+    this.addMiddleware(accessControlMiddleware());
     this.addMiddleware(cookieParser());
     this.addMiddleware(loggerMiddleware());
     this.addMiddleware(express.json());
     this.#addRouters(routers);
+    this.addMiddleware(errorHandlerMiddleware());
   }
 
   #addRouters(routers) {
@@ -62,10 +54,8 @@ class Server {
   }
 
   start() {
-    this.addMiddleware(errorHandlerMiddleware());
-
     return new Promise(resolve => {
-      this.#app.listen(this.#port, () => resolve(this));
+      this.#app.listen(this.#port, resolve);
     });
   }
 }
