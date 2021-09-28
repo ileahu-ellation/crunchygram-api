@@ -40,11 +40,7 @@ class UserRouter extends Router {
     const existingUser = User.find(propEq('username', username));
 
     if (existingUser) {
-      req.cookie.set('username', username, {
-        signed: false,
-        secure: false,
-        httpOnly: true,
-      });
+      res.cookie('username', username, { maxAge: 900000, httpOnly: true });
       res.send(existingUser);
 
       return;
@@ -62,11 +58,12 @@ class UserRouter extends Router {
    * @return {string} 201 - success response - application/json
    */
   async logout(req, res) {
-    req.cookie.set('username', null, {
-      signed: false,
-      secure: false,
-      httpOnly: true,
-    });
+    // req.cookie.set('username', null, {
+    //   signed: false,
+    //   secure: false,
+    //   httpOnly: true,
+    // });
+    res.cookie('username', null, { maxAge: 900000, httpOnly: true });
     res.status(201).send();
   }
 

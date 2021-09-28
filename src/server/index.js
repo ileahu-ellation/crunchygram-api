@@ -1,8 +1,8 @@
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import loggerMiddleware from './middlewares/loggerMiddleware.js';
 import errorHandlerMiddleware from './middlewares/errorHandlerMiddleware.js';
-import cookieSessionMiddleware from './middlewares/cookieSessionMiddleware.js';
 import invariant from '../util/invariant.js';
 import NotFoundException from './exceptions/NotFoundException.js';
 import { HTTP_METHODS } from './util/constants.js';
@@ -24,7 +24,8 @@ class Server {
 
     this.#app.set('trust proxy', 1);
     this.addMiddleware(cors());
-    this.addMiddleware(cookieSessionMiddleware());
+    // this.addMiddleware(cookieSessionMiddleware());
+    this.addMiddleware(cookieParser());
     this.addMiddleware(loggerMiddleware());
     this.addMiddleware(express.json());
     this.#addRouters(routers);
