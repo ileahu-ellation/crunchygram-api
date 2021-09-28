@@ -1,5 +1,6 @@
 import Entity from '../util/Entity.js';
 import Like from './Like.js';
+import { propEq } from 'ramda';
 
 /**
  * Post type
@@ -30,5 +31,12 @@ class Post extends Entity {
     }));
   }
 }
+
+const postExistsValidator = {
+  check: value => Post.find(propEq('id', value)),
+  message: value => `post with id "${value}" does not exist`,
+};
+
+export { postExistsValidator };
 
 export default new Post();
