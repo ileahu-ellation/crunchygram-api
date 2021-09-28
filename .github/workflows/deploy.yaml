@@ -40,6 +40,9 @@ jobs:
   deploy:
     needs: publish
     runs-on: ubuntu-latest
+    env:
+      KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2.3.4
@@ -52,8 +55,6 @@ jobs:
           namespace: 'default'
           helm: 'helm3'
           task: 'remove'
-        env:
-          KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
 
       - name: 'Deploy'
         uses: 'deliverybot/helm@master'
@@ -62,5 +63,3 @@ jobs:
           release: 'crgram-api'
           namespace: 'default'
           helm: 'helm3'
-        env:
-          KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
