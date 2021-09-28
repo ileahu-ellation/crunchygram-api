@@ -23,8 +23,7 @@ class Server {
     docs(this.#app);
 
     this.#app.set('trust proxy', 1);
-    this.addMiddleware(cors());
-    // this.addMiddleware(cookieSessionMiddleware());
+    this.addMiddleware(cors({ credentials: true, origin: true }));
     this.addMiddleware(cookieParser());
     this.addMiddleware(loggerMiddleware());
     this.addMiddleware(express.json());
