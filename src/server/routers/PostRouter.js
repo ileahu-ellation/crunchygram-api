@@ -27,7 +27,7 @@ class PostRouter extends Router {
     this.addRoute(
       GET,
       '',
-      requireAuthMiddleware(),
+      // requireAuthMiddleware(),
       querySanitizerMiddleware({
         limit: when(identity, Number),
         start: when(identity, Number),
@@ -49,7 +49,7 @@ class PostRouter extends Router {
       }),
       this.list,
     );
-    this.addRoute(GET, '/liked', this.liked);
+    this.addRoute(GET, '/liked', requireAuthMiddleware(), this.liked);
   }
 
   /**
