@@ -1,4 +1,5 @@
 import BadRequestException from '../exceptions/BadRequestException.js';
+import { compose, not } from 'ramda';
 
 const createValidator = options => {
   return data => {
@@ -28,4 +29,9 @@ const createValidator = options => {
   };
 };
 
-export default createValidator;
+const numberValidator = {
+  check: compose(not, Number.isNaN),
+  message: () => 'must be a number',
+};
+
+export { createValidator, numberValidator };

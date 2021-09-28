@@ -1,13 +1,11 @@
 import {
   always,
   compose,
-  filter,
   identity,
   includes,
   not,
   prop,
   propEq,
-  slice,
   toLower,
   trim,
   when,
@@ -19,6 +17,8 @@ import { GET } from '../util/constants.js';
 import requireAuthMiddleware from '../middlewares/authenticationMiddleware.js';
 import { queryValidatorMiddleware } from '../middlewares/validatorMiddleware.js';
 import { querySanitizerMiddleware } from '../middlewares/sanitizeMiddleware.js';
+import { numberValidator } from '../util/validator.js';
+import { numberSanitizer } from '../util/sanitizer.js';
 
 class PostRouter extends Router {
   constructor(props) {
@@ -29,27 +29,30 @@ class PostRouter extends Router {
       '',
       // requireAuthMiddleware(),
       querySanitizerMiddleware({
-        limit: when(identity, Number),
-        start: when(identity, Number),
+        limit: numberSanitizer,
+        start: numberSanitizer,
         search: when(identity, compose(toLower, trim)),
       }),
       queryValidatorMiddleware({
-        limit: [
-          {
-            check: compose(not, Number.isNaN),
-            message: () => 'must be a number',
-          },
-        ],
-        start: [
-          {
-            check: compose(not, Number.isNaN),
-            message: () => 'must be a number',
-          },
-        ],
+        limit: [numberValidator],
+        start: [numberValidator],
       }),
       this.list,
     );
-    this.addRoute(GET, '/liked', requireAuthMiddleware(), this.liked);
+    this.addRoute(
+      GET,
+      '/liked',
+      requireAuthMiddleware(),
+      querySanitizerMiddleware({
+        limit: numberSanitizer,
+        start: numberSanitizer,
+      }),
+      queryValidatorMiddleware({
+        limit: [numberValidator],
+        start: [numberValidator],
+      }),
+      this.liked,
+    );
   }
 
   /**
@@ -64,14 +67,9 @@ class PostRouter extends Router {
   async list(req, res) {
     const { limit = 10, start = 0, search = '' } = req.query;
 
-    const posts = compose(
-      slice(start, start + limit),
-      when(
-        always(search),
-        filter(compose(includes(search), toLower, prop('name'))),
-      ),
-      Post.list,
-    )();
+    const posts = Post.list(
+      when(always(search), compose(includes(search), toLower, prop('name'))),
+    ).slice(start, start + limit);
 
     res.send(posts);
   }
@@ -84,11 +82,15 @@ class PostRouter extends Router {
    */
   async liked(req, res) {
     const { username } = req.session;
+    const { limit = 10, start = 0 } = req.query;
 
     const likedPostIds = Like.list(propEq('username', username)).map(
       prop('postId'),
     );
-    const posts = Post.list(({ id }) => likedPostIds.includes(id));
+    const posts = Post.list(({ id }) => likedPostIds.includes(id)).slice(
+      start,
+      start + limit,
+    );
 
     res.send(posts);
   }

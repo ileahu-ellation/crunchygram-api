@@ -1,4 +1,4 @@
-import createValidator from '../util/createValidator.js';
+import { createValidator } from '../util/validator.js';
 
 const createValidatorMiddleware = prop => options => {
   const validate = createValidator(options);
