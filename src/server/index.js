@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import loggerMiddleware from './middlewares/loggerMiddleware.js';
 import errorHandlerMiddleware from './middlewares/errorHandlerMiddleware.js';
 import cookieSessionMiddleware from './middlewares/cookieSessionMiddleware.js';
@@ -21,6 +22,7 @@ class Server {
 
     docs(this.#app);
 
+    this.addMiddleware(cors());
     this.addMiddleware(cookieSessionMiddleware());
     this.addMiddleware(loggerMiddleware());
     this.addMiddleware(express.json());
