@@ -1,5 +1,4 @@
 import express from 'express';
-import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import loggerMiddleware from './middlewares/loggerMiddleware.js';
 import errorHandlerMiddleware from './middlewares/errorHandlerMiddleware.js';
@@ -23,7 +22,21 @@ class Server {
     docs(this.#app);
 
     this.#app.set('trust proxy', 1);
-    this.addMiddleware(cors({ credentials: true, origin: true }));
+    this.addMiddleware((req, res, next) => {
+      const allowedOrigins = [
+        'http://localhost:3000',
+        'http://localhost:3002',
+        'http://127.0.0.1:3000',
+      ];
+      const origin = req.headers.origin;
+      if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+      }
+      res.header('Access-Control-Allow-Methods', 'GET, OPTIONS, POST');
+      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+      res.header('Access-Control-Allow-Credentials', true);
+      return next();
+    });
     this.addMiddleware(cookieParser());
     this.addMiddleware(loggerMiddleware());
     this.addMiddleware(express.json());
