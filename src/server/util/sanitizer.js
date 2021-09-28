@@ -1,5 +1,7 @@
-import { identity, when } from 'ramda';
+import { compose, identity, toLower, trim, when } from 'ramda';
 
 const numberSanitizer = when(identity, Number);
 
-export { numberSanitizer };
+const stringSanitizer = when(identity, compose(toLower, trim));
+
+export { numberSanitizer, stringSanitizer };
