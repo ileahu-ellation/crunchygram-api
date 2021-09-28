@@ -7,7 +7,7 @@ const options = {
     version: '0.1.0',
     title: 'Crunchygram API',
   },
-  baseDir: resolve(dirname(fileURLToPath(import.meta.url)), '..'),
+  baseDir: resolve(dirname(fileURLToPath(import.meta.url)), '../..'),
   filesPattern: './**/*.js',
   swaggerUIPath: '/docs',
   exposeSwaggerUI: true,
