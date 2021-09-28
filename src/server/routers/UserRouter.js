@@ -44,6 +44,7 @@ class UserRouter extends Router {
         maxAge: 900000,
         httpOnly: false,
         sameSite: 'none',
+        secure: true,
       });
       res.send(existingUser);
 
@@ -66,6 +67,7 @@ class UserRouter extends Router {
       maxAge: 900000,
       httpOnly: false,
       sameSite: 'none',
+      secure: true,
     });
     res.status(201).send();
   }

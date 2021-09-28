@@ -10,7 +10,7 @@ spec:
     {{- range .Values.service.ports }}
     {{- $containerPort := .containerPort | default .port }}
     {{- $protocol := .protocol | default "TCP" }}
-    - name: {{ $protocol | lower }}-{{ $containerPort }}
+    - name: {{ $protocol | lower }}-{{ .port }}
       protocol: {{ $protocol | quote }}
       targetPort: {{ $containerPort }}
       port: {{ .port }}
