@@ -23,7 +23,7 @@ class Server {
 
     this.#app.set('trust proxy', 1);
     this.addMiddleware((req, res, next) => {
-      const origin = req.headers.origin;
+      const { origin } = req.headers;
 
       res.setHeader('Access-Control-Allow-Origin', origin);
       res.header('Access-Control-Allow-Methods', 'GET, OPTIONS, POST');
