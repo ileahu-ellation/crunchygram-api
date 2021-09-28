@@ -40,7 +40,11 @@ class UserRouter extends Router {
     const existingUser = User.find(propEq('username', username));
 
     if (existingUser) {
-      req.session.username = username;
+      req.cookie.set('username', username, {
+        signed: false,
+        secure: false,
+        httpOnly: true,
+      });
       res.send(existingUser);
 
       return;
@@ -58,7 +62,11 @@ class UserRouter extends Router {
    * @return {string} 201 - success response - application/json
    */
   async logout(req, res) {
-    delete req.session.username;
+    req.cookie.set('username', null, {
+      signed: false,
+      secure: false,
+      httpOnly: true,
+    });
     res.status(201).send();
   }
 

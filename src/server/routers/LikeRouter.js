@@ -39,7 +39,7 @@ class LikeRouter extends Router {
    */
   async toggle(req, res) {
     const { postId } = req.params;
-    const { username } = req.session;
+    const { username } = req;
 
     const like = await Like.toggle({ username, postId });
 

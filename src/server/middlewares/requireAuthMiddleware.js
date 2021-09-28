@@ -1,13 +1,15 @@
 import UnauthorizedException from '../exceptions/UnauthorizedException.js';
 
 const requireAuthMiddleware = () => (req, res, next) => {
-  console.log('req.session.username', req.session.username);
+  const username = req.cookie.get('username', { signed: false });
 
-  if (!req.session.username) {
+  if (!username) {
     next(new UnauthorizedException());
 
     return;
   }
+
+  req.username = username;
 
   next();
 };

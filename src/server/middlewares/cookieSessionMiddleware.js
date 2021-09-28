@@ -1,10 +1,9 @@
-import cookieSession from 'cookie-session';
+import Cookie from 'cookies';
 
-const cookieSessionMiddleware = () =>
-  cookieSession({
-    name: 'session',
-    keys: ['cr'],
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
-  });
+const cookieSessionMiddleware = () => (req, res, next) => {
+  req.cookie = new Cookie(req, res, {});
+
+  next();
+};
 
 export default cookieSessionMiddleware;

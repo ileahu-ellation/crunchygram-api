@@ -81,7 +81,7 @@ class PostRouter extends Router {
    * @return {array<Post>} 200 - success response - application/json
    */
   async liked(req, res) {
-    const { username } = req.session;
+    const { username } = req;
     const { limit = 10, start = 0 } = req.query;
 
     const likedPostIds = Like.list(propEq('username', username)).map(

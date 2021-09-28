@@ -7,6 +7,7 @@ import Entity from '../util/Entity.js';
  * @property {string} name
  * @property {string} image
  * @property {string} avatar
+ * @property {string} likesCount
  */
 class Post extends Entity {
   entity = 'posts';

@@ -8,6 +8,7 @@ import avatars from '../../constants/avatars.js';
  * @property {string} id
  * @property {string} username
  * @property {string} avatar
+ * @property {string} likesCount
  */
 class User extends Entity {
   entity = 'users';
