@@ -18,7 +18,7 @@ import requireAuthMiddleware from '../middlewares/requireAuthMiddleware.js';
 import { queryValidatorMiddleware } from '../middlewares/validatorMiddleware.js';
 import { querySanitizerMiddleware } from '../middlewares/sanitizeMiddleware.js';
 import { numberValidator } from '../util/validator.js';
-import { numberSanitizer } from '../util/sanitizer.js';
+import { numberSanitizer, stringSanitizer } from '../util/sanitizer.js';
 
 class PostRouter extends Router {
   constructor(props) {
@@ -31,7 +31,7 @@ class PostRouter extends Router {
       querySanitizerMiddleware({
         limit: numberSanitizer,
         start: numberSanitizer,
-        search: when(identity, compose(toLower, trim)),
+        search: stringSanitizer,
       }),
       queryValidatorMiddleware({
         limit: [numberValidator],

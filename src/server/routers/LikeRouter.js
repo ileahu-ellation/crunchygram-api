@@ -1,10 +1,10 @@
-import { propEq } from 'ramda';
 import Router from '../util/Router.js';
 import Like from '../../db/entities/Like.js';
-import Post from '../../db/entities/Post.js';
+import { postExistsValidator } from '../../db/entities/Post.js';
 import { POST } from '../util/constants.js';
 import { paramsValidatorMiddleware } from '../middlewares/validatorMiddleware.js';
 import requireAuthMiddleware from '../middlewares/requireAuthMiddleware.js';
+import { requiredValueValidator } from '../util/validator.js';
 
 class LikeRouter extends Router {
   constructor(props) {
@@ -15,16 +15,7 @@ class LikeRouter extends Router {
       '/toggle/:postId',
       requireAuthMiddleware(),
       paramsValidatorMiddleware({
-        postId: [
-          {
-            check: Boolean,
-            message: () => 'required value',
-          },
-          {
-            check: value => Post.find(propEq('id', value)),
-            message: value => `post with id "${value}" does not exist`,
-          },
-        ],
+        postId: [requiredValueValidator, postExistsValidator],
       }),
       this.toggle,
     );
