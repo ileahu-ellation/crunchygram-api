@@ -11,7 +11,7 @@ const options = {
   filesPattern: './**/*.js',
   swaggerUIPath: '/docs',
   exposeSwaggerUI: true,
-  exposeApiDocs: false,
+  exposeApiDocs: true,
   apiDocsPath: '/v3/api-docs',
   notRequiredAsNullable: false,
   swaggerUiOptions: {},
