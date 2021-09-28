@@ -3,7 +3,7 @@ import Router from '../util/Router.js';
 import User from '../../db/entities/User.js';
 import { GET, POST } from '../util/constants.js';
 import { bodyValidatorMiddleware } from '../middlewares/validatorMiddleware.js';
-import requireAuthMiddleware from '../middlewares/authenticationMiddleware.js';
+import requireAuthMiddleware from '../middlewares/requireAuthMiddleware.js';
 
 class UserRouter extends Router {
   constructor(props) {

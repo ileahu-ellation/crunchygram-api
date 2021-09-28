@@ -14,7 +14,7 @@ import Router from '../util/Router.js';
 import Post from '../../db/entities/Post.js';
 import Like from '../../db/entities/Like.js';
 import { GET } from '../util/constants.js';
-import requireAuthMiddleware from '../middlewares/authenticationMiddleware.js';
+import requireAuthMiddleware from '../middlewares/requireAuthMiddleware.js';
 import { queryValidatorMiddleware } from '../middlewares/validatorMiddleware.js';
 import { querySanitizerMiddleware } from '../middlewares/sanitizeMiddleware.js';
 import { numberValidator } from '../util/validator.js';

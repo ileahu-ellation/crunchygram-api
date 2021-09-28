@@ -4,7 +4,7 @@ import Like from '../../db/entities/Like.js';
 import Post from '../../db/entities/Post.js';
 import { POST } from '../util/constants.js';
 import { paramsValidatorMiddleware } from '../middlewares/validatorMiddleware.js';
-import requireAuthMiddleware from '../middlewares/authenticationMiddleware.js';
+import requireAuthMiddleware from '../middlewares/requireAuthMiddleware.js';
 
 class LikeRouter extends Router {
   constructor(props) {
