@@ -7,7 +7,10 @@ import {
   paramsValidatorMiddleware,
 } from '../middlewares/validatorMiddleware.js';
 import requireAuthMiddleware from '../middlewares/requireAuthMiddleware.js';
-import { userExistsValidator } from '../../db/util/validators.js';
+import {
+  userExistsValidator,
+  lengthValidator,
+} from '../../db/util/validators.js';
 
 class UserRouter extends Router {
   constructor(props) {
@@ -16,14 +19,7 @@ class UserRouter extends Router {
     this.addRoute(
       POST,
       '/login',
-      bodyValidatorMiddleware({
-        username: [
-          {
-            check: compose(lte(3), length),
-            message: () => 'length must be at least 3 characters',
-          },
-        ],
-      }),
+      bodyValidatorMiddleware({ username: [lengthValidator(3)] }),
       this.login,
     );
 
@@ -104,20 +100,21 @@ class UserRouter extends Router {
   /**
    * GET /api/user
    * @summary List users
+   * @param {string} search.query - username to search by
    * @tags user
    * @return {User} 200 - success response - application/json
    */
   async list(req, res) {
-    const { username } = req.query;
+    const { search } = req.query;
     const data = await User.list();
 
-    if (!username) {
+    if (!search) {
       res.send(data);
 
       return;
     }
 
-    res.send(data.filter(compose(includes(username), prop('username'))));
+    res.send(data.filter(compose(includes(search), prop('username'))));
   }
 }
 

@@ -1,15 +1,4 @@
-import {
-  always,
-  compose,
-  identity,
-  includes,
-  not,
-  prop,
-  propEq,
-  toLower,
-  trim,
-  when,
-} from 'ramda';
+import { always, compose, includes, prop, propEq, toLower, when } from 'ramda';
 import Router from '../util/Router.js';
 import Post from '../../db/entities/Post.js';
 import Like from '../../db/entities/Like.js';
@@ -24,34 +13,39 @@ class PostRouter extends Router {
   constructor(props) {
     super(props);
 
+    const paginationValidator = queryValidatorMiddleware({
+      limit: [numberValidator],
+      start: [numberValidator],
+    });
+    const paginationSanitizer = querySanitizerMiddleware({
+      limit: numberSanitizer,
+      start: numberSanitizer,
+    });
+
     this.addRoute(
       GET,
       '',
-      // requireAuthMiddleware(),
-      querySanitizerMiddleware({
-        limit: numberSanitizer,
-        start: numberSanitizer,
-        search: stringSanitizer,
-      }),
-      queryValidatorMiddleware({
-        limit: [numberValidator],
-        start: [numberValidator],
-      }),
+      requireAuthMiddleware(),
+      paginationSanitizer,
+      querySanitizerMiddleware({ search: stringSanitizer }),
+      paginationValidator,
       this.list,
     );
     this.addRoute(
       GET,
       '/liked',
       requireAuthMiddleware(),
-      querySanitizerMiddleware({
-        limit: numberSanitizer,
-        start: numberSanitizer,
-      }),
-      queryValidatorMiddleware({
-        limit: [numberValidator],
-        start: [numberValidator],
-      }),
-      this.liked,
+      paginationSanitizer,
+      paginationValidator,
+      this.likedByMe,
+    );
+    this.addRoute(
+      GET,
+      '/liked/:username',
+      requireAuthMiddleware(),
+      paginationSanitizer,
+      paginationValidator,
+      this.likedByMe,
     );
   }
 
@@ -80,14 +74,29 @@ class PostRouter extends Router {
    * @tags post
    * @return {array<Post>} 200 - success response - application/json
    */
-  async liked(req, res) {
+  async likedByMe(req, res) {
     const { username } = req.cookies;
     const { limit = 10, start = 0 } = req.query;
 
-    const likedPostIds = Like.list(propEq('username', username)).map(
-      prop('postId'),
+    const posts = Post.getLikedByUsername({ username }).slice(
+      start,
+      start + limit,
     );
-    const posts = Post.list(({ id }) => likedPostIds.includes(id)).slice(
+
+    res.send(posts);
+  }
+
+  /**
+   * GET /api/post/liked/:username
+   * @summary Get user's liked posts by username
+   * @tags post
+   * @return {array<Post>} 200 - success response - application/json
+   */
+  async likedByUser(req, res) {
+    const { username } = req.params;
+    const { limit = 10, start = 0 } = req.query;
+
+    const posts = Post.getLikedByUsername({ username }).slice(
       start,
       start + limit,
     );

@@ -1,4 +1,4 @@
-import { propEq } from 'ramda';
+import { compose, length, lte, propEq } from 'ramda';
 import Post from '../entities/Post.js';
 import User from '../entities/User.js';
 
@@ -12,4 +12,9 @@ const userExistsValidator = {
   message: value => `user with username "${value}" does not exist`,
 };
 
-export { postExistsValidator, userExistsValidator };
+const lengthValidator = len => ({
+  check: compose(lte(len), length),
+  message: () => `length must be at least ${len} characters`,
+});
+
+export { postExistsValidator, userExistsValidator, lengthValidator };

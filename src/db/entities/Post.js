@@ -1,3 +1,4 @@
+import { prop, propEq } from 'ramda';
 import Entity from '../util/Entity.js';
 import Like from './Like.js';
 import Comment from './Comment.js';
@@ -37,6 +38,14 @@ class Post extends Entity {
       likesCount: likesCountMap[post.id] || 0,
       commentsCount: commentsCountMap[post.id] || 0,
     }));
+  }
+
+  getLikedByUsername({ username }) {
+    const likedPostIds = Like.list(propEq('username', username)).map(
+      prop('postId'),
+    );
+
+    return this.list(({ id }) => likedPostIds.includes(id));
   }
 }
 
