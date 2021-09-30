@@ -1,5 +1,6 @@
 import Entity from '../util/Entity.js';
 import Like from './Like.js';
+import Comment from './Comment.js';
 
 /**
  * Post type
@@ -21,12 +22,20 @@ class Post extends Entity {
       }),
       {},
     );
+    const commentsCountMap = Comment.list().reduce(
+      (acc, { postId }) => ({
+        ...acc,
+        [postId]: (acc[postId] || 0) + 1,
+      }),
+      {},
+    );
 
     const rawPosts = super.list(selector);
 
     return rawPosts.map(post => ({
       ...post,
       likesCount: likesCountMap[post.id] || 0,
+      commentsCount: commentsCountMap[post.id] || 0,
     }));
   }
 }
