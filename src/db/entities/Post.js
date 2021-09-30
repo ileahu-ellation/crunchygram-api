@@ -23,20 +23,25 @@ class Post extends Entity {
       }),
       {},
     );
-    const commentsCountMap = Comment.list().reduce(
-      (acc, { postId }) => ({
-        ...acc,
-        [postId]: (acc[postId] || 0) + 1,
-      }),
-      {},
-    );
+    const commentLikesMap = {};
+    const postCommentsMap = {};
+    Comment.list().forEach(({ postId, ...comment }) => {
+      commentLikesMap[postId] = (commentLikesMap[postId] || 0) + 1;
+
+      if (!postCommentsMap[postId]) {
+        postCommentsMap[postId] = [];
+      }
+
+      postCommentsMap[postId].push(comment);
+    });
 
     const rawPosts = super.list(selector);
 
     return rawPosts.map(post => ({
       ...post,
       likesCount: likesCountMap[post.id] || 0,
-      commentsCount: commentsCountMap[post.id] || 0,
+      commentsCount: commentLikesMap[post.id] || 0,
+      comments: postCommentsMap[post.id] || [],
     }));
   }
 
