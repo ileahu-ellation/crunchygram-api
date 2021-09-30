@@ -25,6 +25,10 @@ class Entity {
     return data.filter(selector);
   }
 
+  count(selector) {
+    return this.list(selector).length;
+  }
+
   find(selector) {
     return this.instance().find(selector);
   }
@@ -42,8 +46,8 @@ class Entity {
     return data;
   }
 
-  async delete(predicate) {
-    const data = this.instance().filter(compose(not, predicate));
+  async delete(selector) {
+    const data = this.instance().filter(compose(not, selector));
 
     await LowDB.setEntityData(this.entity, data);
   }
