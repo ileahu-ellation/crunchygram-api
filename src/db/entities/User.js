@@ -1,5 +1,6 @@
 import Entity from '../util/Entity.js';
 import Like from './Like.js';
+import Comment from './Comment.js';
 import sample from '../../util/sample.js';
 import avatars from '../../constants/avatars.js';
 import { propEq } from 'ramda';
@@ -17,25 +18,33 @@ class User extends Entity {
 
   async create(props) {
     const avatar = sample(avatars);
-
-    return super.create({
+    const user = await super.create({
       ...props,
       avatar,
     });
+
+    return {
+      ...user,
+      likesCount: 0,
+      commentsCount: 0,
+    };
   }
 
   find(selector) {
-    const rawUser = super.find(selector);
+    const user = super.find(selector);
 
-    if (!rawUser) {
+    if (!user) {
       return null;
     }
 
-    const likesCount = Like.list(propEq('username', rawUser.username)).length;
+    const { username } = user;
+    const likesCount = Like.count(propEq('username', username));
+    const commentsCount = Comment.count(propEq('username', username));
 
     return {
-      ...rawUser,
+      ...user,
       likesCount,
+      commentsCount,
     };
   }
 }
