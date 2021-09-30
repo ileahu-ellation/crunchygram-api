@@ -4,6 +4,7 @@ import UserRouter from './server/routers/UserRouter.js';
 import LikeRouter from './server/routers/LikeRouter.js';
 import PostRouter from './server/routers/PostRouter.js';
 import LowDB from './db/index.js';
+import CommentRouter from './server/routers/CommentRouter.js';
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ dotenv.config();
       new UserRouter({ path: '/user' }),
       new LikeRouter({ path: '/like' }),
       new PostRouter({ path: '/post' }),
+      new CommentRouter({ path: '/comment' }),
     ],
   });
   const lowDB = new LowDB({

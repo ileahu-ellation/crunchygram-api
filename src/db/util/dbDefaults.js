@@ -1,21 +1,19 @@
-import randomID from './randomID.js';
+import { prop } from 'ramda';
+
+const importData = key =>
+  import(`../../constants/${key}.js`).then(prop('default'));
 
 const getDefaultDbData = async () => {
-  const users = await import('../../constants/users.js').then(
-    data => data.default,
-  );
-  const posts = await import('../../constants/posts.js').then(data =>
-    data.default.map(item => ({
-      id: randomID(),
-      ...item,
-    })),
-  );
+  const users = await importData('users');
+  const posts = await importData('posts');
+  const likes = await importData('likes');
+  const comments = await importData('comments');
 
   return {
     users,
+    likes,
+    comments,
     posts,
-    comments: [],
-    likes: [],
   };
 };
 

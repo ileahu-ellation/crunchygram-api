@@ -41,7 +41,7 @@ class UserRouter extends Router {
 
     if (existingUser) {
       res.cookie('username', username, {
-        maxAge: 900000,
+        maxAge: 90000000,
         httpOnly: false,
         sameSite: 'none',
         secure: true,
@@ -64,7 +64,7 @@ class UserRouter extends Router {
    */
   async logout(req, res) {
     res.cookie('username', '', {
-      maxAge: 900000,
+      maxAge: 90000000,
       httpOnly: false,
       sameSite: 'none',
       secure: true,

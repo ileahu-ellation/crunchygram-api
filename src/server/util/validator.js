@@ -18,7 +18,6 @@ const createValidator = options => {
             key,
             message: message(value),
           });
-          continue;
         }
       }
     });

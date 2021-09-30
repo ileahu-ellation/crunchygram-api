@@ -1,6 +1,6 @@
 import Router from '../util/Router.js';
 import Like from '../../db/entities/Like.js';
-import { postExistsValidator } from '../../db/entities/Post.js';
+import { postExistsValidator } from '../../db/util/validators.js';
 import { POST } from '../util/constants.js';
 import { paramsValidatorMiddleware } from '../middlewares/validatorMiddleware.js';
 import requireAuthMiddleware from '../middlewares/requireAuthMiddleware.js';

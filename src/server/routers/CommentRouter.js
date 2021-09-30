@@ -1,11 +1,11 @@
 import Router from '../util/Router.js';
 import Comment from '../../db/entities/Comment.js';
-import { postExistsValidator } from '../../db/entities/Post.js';
+import { postExistsValidator } from '../../db/util/validators.js';
 import { POST } from '../util/constants.js';
 import { bodyValidatorMiddleware } from '../middlewares/validatorMiddleware.js';
 import requireAuthMiddleware from '../middlewares/requireAuthMiddleware.js';
 import { querySanitizerMiddleware } from '../middlewares/sanitizeMiddleware.js';
-import { requiredValue } from '../util/validator.js';
+import { requiredValueValidator } from '../util/validator.js';
 import { stringSanitizer } from '../util/sanitizer.js';
 
 class CommentRouter extends Router {
@@ -20,9 +20,9 @@ class CommentRouter extends Router {
         text: stringSanitizer,
       }),
       bodyValidatorMiddleware({
-        postId: [requiredValue, postExistsValidator],
+        postId: [requiredValueValidator, postExistsValidator],
       }),
-      this.toggle,
+      this.create,
     );
   }
 
