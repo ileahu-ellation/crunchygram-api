@@ -7,6 +7,7 @@ import invariant from '../util/invariant.js';
 import NotFoundException from './exceptions/NotFoundException.js';
 import { HTTP_METHODS } from './util/constants.js';
 import docs from './docs/index.js';
+import cookieHelpersMiddleware from './middlewares/cookieHelpersMiddleware.js';
 
 class Server {
   #port;
@@ -27,6 +28,7 @@ class Server {
     this.addMiddleware(cookieParser());
     this.addMiddleware(loggerMiddleware());
     this.addMiddleware(express.json());
+    this.addMiddleware(cookieHelpersMiddleware());
     this.#addRouters(routers);
     this.addMiddleware(errorHandlerMiddleware());
   }

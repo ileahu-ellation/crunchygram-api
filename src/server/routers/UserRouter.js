@@ -2,8 +2,12 @@ import { compose, includes, length, lte, prop, propEq } from 'ramda';
 import Router from '../util/Router.js';
 import User from '../../db/entities/User.js';
 import { GET, POST } from '../util/constants.js';
-import { bodyValidatorMiddleware } from '../middlewares/validatorMiddleware.js';
+import {
+  bodyValidatorMiddleware,
+  paramsValidatorMiddleware,
+} from '../middlewares/validatorMiddleware.js';
 import requireAuthMiddleware from '../middlewares/requireAuthMiddleware.js';
+import { userExistsValidator } from '../../db/util/validators.js';
 
 class UserRouter extends Router {
   constructor(props) {
@@ -23,8 +27,17 @@ class UserRouter extends Router {
       this.login,
     );
 
-    this.addRoute(GET, '', requireAuthMiddleware(), this.list);
     this.addRoute(GET, '/logout', this.logout);
+    this.addRoute(GET, '', requireAuthMiddleware(), this.list);
+    this.addRoute(GET, '/me', this.getMe);
+    this.addRoute(
+      GET,
+      '/:username',
+      paramsValidatorMiddleware({
+        username: [userExistsValidator],
+      }),
+      this.getUserByUsername,
+    );
   }
 
   /**
@@ -40,12 +53,7 @@ class UserRouter extends Router {
     const existingUser = User.find(propEq('username', username));
 
     if (existingUser) {
-      res.cookie('username', username, {
-        maxAge: 90000000,
-        httpOnly: false,
-        sameSite: 'none',
-        secure: true,
-      });
+      res.setCookie('username', username);
       res.send(existingUser);
 
       return;
@@ -57,18 +65,39 @@ class UserRouter extends Router {
   }
 
   /**
+   * POST /api/user/:username
+   * @summary Get user data by username
+   * @tags user
+   * @return {User} 200 - success response - application/json
+   */
+  async getUserByUsername(req, res) {
+    const { username } = req.params;
+    const user = User.find(propEq('username', username));
+
+    res.send(user);
+  }
+
+  /**
+   * POST /api/user/me
+   * @summary Get my user data
+   * @tags user
+   * @return {User} 200 - success response - application/json
+   */
+  async getMe(req, res) {
+    const { username } = req.cookies;
+    const user = User.find(propEq('username', username));
+
+    res.send(user);
+  }
+
+  /**
    * GET /api/user/logout
    * @summary Logout
    * @tags user
    * @return {string} 201 - success response - application/json
    */
   async logout(req, res) {
-    res.cookie('username', '', {
-      maxAge: 90000000,
-      httpOnly: false,
-      sameSite: 'none',
-      secure: true,
-    });
+    res.setCookie('username', '');
     res.status(201).send();
   }
 
