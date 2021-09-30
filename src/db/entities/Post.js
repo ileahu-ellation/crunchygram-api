@@ -10,7 +10,9 @@ import Comment from './Comment.js';
  * @property {string} name
  * @property {string} image
  * @property {string} avatar
- * @property {string} likesCount
+ * @property {number} likesCount
+ * @property {number} commentsCount
+ * @property {array<Comment>} comments
  */
 class Post extends Entity {
   entity = 'posts';

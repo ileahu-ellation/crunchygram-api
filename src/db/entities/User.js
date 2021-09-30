@@ -12,6 +12,7 @@ import { propEq } from 'ramda';
  * @property {string} username
  * @property {string} avatar
  * @property {string} likesCount
+ * @property {string} commentsCount
  */
 class User extends Entity {
   entity = 'users';
