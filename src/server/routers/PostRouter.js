@@ -25,7 +25,7 @@ class PostRouter extends Router {
     this.addRoute(
       GET,
       '',
-      requireAuthMiddleware(),
+      // requireAuthMiddleware(),
       paginationSanitizer,
       querySanitizerMiddleware({ search: stringSanitizer }),
       paginationValidator,
@@ -42,7 +42,7 @@ class PostRouter extends Router {
     this.addRoute(
       GET,
       '/liked/:username',
-      requireAuthMiddleware(),
+      // requireAuthMiddleware(),
       paginationSanitizer,
       paginationValidator,
       this.likedByMe,
