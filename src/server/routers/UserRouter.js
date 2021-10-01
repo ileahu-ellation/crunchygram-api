@@ -24,7 +24,7 @@ class UserRouter extends Router {
     );
 
     this.addRoute(GET, '/logout', this.logout);
-    this.addRoute(GET, '', requireAuthMiddleware(), this.list);
+    this.addRoute(GET, '', /*requireAuthMiddleware(),*/ this.list);
     this.addRoute(GET, '/me', this.getMe);
     this.addRoute(
       GET,
