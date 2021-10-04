@@ -21,9 +21,8 @@ class Server {
     this.#port = port;
     this.#path = path;
 
-    docs(this.#app);
-
     this.#app.set('trust proxy', 1);
+    docs(this.#app);
     this.addMiddleware(accessControlMiddleware());
     this.addMiddleware(cookieParser());
     this.addMiddleware(loggerMiddleware());
