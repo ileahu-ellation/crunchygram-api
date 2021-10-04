@@ -57,6 +57,7 @@ class UserRouter extends Router {
 
     const newUser = await User.create({ username });
 
+    res.setCookie('username', username);
     res.send(newUser);
   }
 
