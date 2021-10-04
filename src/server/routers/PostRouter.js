@@ -45,7 +45,7 @@ class PostRouter extends Router {
       // requireAuthMiddleware(),
       paginationSanitizer,
       paginationValidator,
-      this.likedByMe,
+      this.likedByUser,
     );
     this.addRoute(GET, '/:id', this.post);
   }
