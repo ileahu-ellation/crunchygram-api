@@ -6,6 +6,7 @@ import Entity from '../util/Entity.js';
  * @property {string} id
  * @property {string} text
  * @property {string} postId
+ * @property {string} username
  */
 class Comment extends Entity {
   entity = 'comments';

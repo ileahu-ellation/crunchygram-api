@@ -1,4 +1,4 @@
-import { prop, propEq } from 'ramda';
+import { prop, propEq, allPass } from 'ramda';
 import Entity from '../util/Entity.js';
 import Like from './Like.js';
 import Comment from './Comment.js';
@@ -12,16 +12,20 @@ import Comment from './Comment.js';
  * @property {string} avatar
  * @property {number} likesCount
  * @property {number} commentsCount
+ * @property {boolean} isUserLiked
  * @property {array<Comment>} comments
  */
 class Post extends Entity {
   entity = 'posts';
 
-  list(selector) {
-    const likesCountMap = Like.list().reduce(
-      (acc, { postId }) => ({
+  list(selector, options) {
+    const likesMap = Like.list().reduce(
+      (acc, { postId, username }) => ({
         ...acc,
-        [postId]: (acc[postId] || 0) + 1,
+        [postId]: {
+          count: (acc[postId]?.count || 0) + 1,
+          isUserLiked: username === options.username,
+        },
       }),
       {},
     );
@@ -41,7 +45,8 @@ class Post extends Entity {
 
     return rawPosts.map(post => ({
       ...post,
-      likesCount: likesCountMap[post.id] || 0,
+      likesCount: likesMap[post.id]?.count || 0,
+      isUserLiked: Boolean(likesMap[post.id]?.isUserLiked),
       commentsCount: commentLikesMap[post.id] || 0,
       comments: postCommentsMap[post.id] || [],
     }));
