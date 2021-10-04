@@ -3,7 +3,8 @@ import Like from './Like.js';
 import Comment from './Comment.js';
 import sample from '../../util/sample.js';
 import avatars from '../../constants/avatars.js';
-import { propEq } from 'ramda';
+import { propEq, prop, compose, tap } from 'ramda';
+import Post from './Post.js';
 
 /**
  * User type
@@ -11,8 +12,9 @@ import { propEq } from 'ramda';
  * @property {string} id
  * @property {string} username
  * @property {string} avatar
- * @property {string} likesCount
- * @property {string} commentsCount
+ * @property {number} likesCount
+ * @property {number} commentsCount
+ * @property {array<Post>} likedPosts
  */
 class User extends Entity {
   entity = 'users';
@@ -39,13 +41,18 @@ class User extends Entity {
     }
 
     const { username } = user;
-    const likesCount = Like.count(propEq('username', username));
+
     const commentsCount = Comment.count(propEq('username', username));
+    const likes = Like.list(propEq('username', username)).map(prop('postId'));
+    const likedPosts = Post.list(({ id }) => likes.includes(id), {
+      username,
+    });
 
     return {
       ...user,
-      likesCount,
+      likesCount: likes.length,
       commentsCount,
+      likedPosts,
     };
   }
 }
