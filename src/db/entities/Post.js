@@ -29,10 +29,10 @@ class Post extends Entity {
       }),
       {},
     );
-    const commentLikesMap = {};
+    const commentsCountMap = {};
     const postCommentsMap = {};
     Comment.list().forEach(({ postId, ...comment }) => {
-      commentLikesMap[postId] = (commentLikesMap[postId] || 0) + 1;
+      commentsCountMap[postId] = (commentsCountMap[postId] || 0) + 1;
 
       if (!postCommentsMap[postId]) {
         postCommentsMap[postId] = [];
@@ -47,7 +47,7 @@ class Post extends Entity {
       ...post,
       likesCount: likesMap[post.id]?.count || 0,
       isUserLiked: Boolean(likesMap[post.id]?.isUserLiked),
-      commentsCount: commentLikesMap[post.id] || 0,
+      commentsCount: commentsCountMap[post.id] || 0,
       comments: postCommentsMap[post.id] || [],
     }));
   }
@@ -58,6 +58,23 @@ class Post extends Entity {
     );
 
     return this.list(({ id }) => likedPostIds.includes(id));
+  }
+
+  getPost({ id, username }) {
+    const post = super.find(propEq('id', id));
+    const likesCount = Like.count(propEq('postId', id));
+    const isUserLiked = Boolean(
+      Like.find(allPass([propEq('username', username), propEq('postId', id)])),
+    );
+    const comments = Comment.list(propEq('postId', id));
+
+    return {
+      ...post,
+      likesCount,
+      isUserLiked,
+      commentsCount: comments.length,
+      comments,
+    };
   }
 }
 

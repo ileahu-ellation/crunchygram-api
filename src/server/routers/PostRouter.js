@@ -47,6 +47,7 @@ class PostRouter extends Router {
       paginationValidator,
       this.likedByMe,
     );
+    this.addRoute(GET, '/:id', this.post);
   }
 
   /**
@@ -60,9 +61,13 @@ class PostRouter extends Router {
    */
   async list(req, res) {
     const { limit = 10, start = 0, search = '' } = req.query;
+    const { username } = req.cookies;
 
     const posts = Post.list(
       when(always(search), compose(includes(search), toLower, prop('name'))),
+      {
+        username,
+      },
     ).slice(start, start + limit);
 
     res.send(posts);
@@ -102,6 +107,22 @@ class PostRouter extends Router {
     );
 
     res.send(posts);
+  }
+
+  /**
+   * GET /api/post/:id
+   * @summary Get post by id
+   * @tags post
+   * @return {Post} 200 - success response - application/json
+   */
+
+  async post(req, res) {
+    const { id } = req.params;
+    const { username } = req.cookies;
+
+    const post = Post.getPost({ id, username });
+
+    res.send(post);
   }
 }
 
