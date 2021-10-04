@@ -1,5 +1,6 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
+import nocache from 'nocache';
 import loggerMiddleware from './middlewares/loggerMiddleware.js';
 import errorHandlerMiddleware from './middlewares/errorHandlerMiddleware.js';
 import accessControlMiddleware from './middlewares/accessControlMiddleware.js';
@@ -23,6 +24,7 @@ class Server {
 
     this.#app.set('trust proxy', 1);
     docs(this.#app);
+    this.addMiddleware(nocache());
     this.addMiddleware(accessControlMiddleware());
     this.addMiddleware(cookieParser());
     this.addMiddleware(loggerMiddleware());
