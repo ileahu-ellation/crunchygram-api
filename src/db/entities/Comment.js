@@ -1,3 +1,4 @@
+import { propEq } from 'ramda';
 import Entity from '../util/Entity.js';
 import User from './User.js';
 
@@ -26,6 +27,14 @@ class Comment extends Entity {
       ...comment,
       avatar: userAvatarsMap[comment.username],
     }));
+  }
+
+  async create(props) {
+    let comment = await super.create(props);
+
+    comment.avatar = User.find(propEq('username', props.username)).avatar;
+
+    return comment;
   }
 }
 
