@@ -3,8 +3,8 @@ import Server from './server/index.js';
 import UserRouter from './server/routers/UserRouter.js';
 import LikeRouter from './server/routers/LikeRouter.js';
 import PostRouter from './server/routers/PostRouter.js';
-import LowDB from './db/index.js';
 import CommentRouter from './server/routers/CommentRouter.js';
+import LowDB from './db/index.js';
 
 dotenv.config();
 

@@ -9,10 +9,10 @@ const options = {
   },
   baseDir: resolve(dirname(fileURLToPath(import.meta.url)), '../..'),
   filesPattern: './**/*.js',
-  swaggerUIPath: '/docs',
+  swaggerUIPath: '/api/docs',
   exposeSwaggerUI: true,
   exposeApiDocs: true,
-  apiDocsPath: '/v3/api-docs',
+  apiDocsPath: '/api/v3/api-docs',
   notRequiredAsNullable: false,
   swaggerUiOptions: {},
 };
