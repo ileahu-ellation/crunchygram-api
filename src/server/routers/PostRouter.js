@@ -1,13 +1,16 @@
-import { always, compose, includes, prop, propEq, toLower, when } from 'ramda';
+import { always, compose, includes, prop, toLower, when } from 'ramda';
 import Router from '../util/Router.js';
 import Post from '../../db/entities/Post.js';
-import Like from '../../db/entities/Like.js';
 import { GET } from '../util/constants.js';
 import requireAuthMiddleware from '../middlewares/requireAuthMiddleware.js';
-import { queryValidatorMiddleware } from '../middlewares/validatorMiddleware.js';
+import {
+  paramsValidatorMiddleware,
+  queryValidatorMiddleware,
+} from '../middlewares/validatorMiddleware.js';
 import { querySanitizerMiddleware } from '../middlewares/sanitizeMiddleware.js';
 import { numberValidator } from '../util/validator.js';
 import { numberSanitizer, stringSanitizer } from '../util/sanitizer.js';
+import { postExistsValidator } from '../../db/util/validators.js';
 
 class PostRouter extends Router {
   constructor(props) {
@@ -47,7 +50,14 @@ class PostRouter extends Router {
       paginationValidator,
       this.likedByUser,
     );
-    this.addRoute(GET, '/:id', this.post);
+    this.addRoute(
+      GET,
+      '/:id',
+      paramsValidatorMiddleware({
+        id: [postExistsValidator],
+      }),
+      this.post,
+    );
   }
 
   /**
