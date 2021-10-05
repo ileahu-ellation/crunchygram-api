@@ -46,19 +46,14 @@ class UserRouter extends Router {
   async login(req, res) {
     const { username } = req.body;
 
-    const existingUser = User.find(propEq('username', username));
+    const normalizedUsername = username.toLowerCase();
 
-    if (existingUser) {
-      res.setCookie('username', username);
-      res.send(existingUser);
+    const user =
+      User.instance().find(propEq('username', normalizedUsername)) ||
+      (await User.create({ username: normalizedUsername }));
 
-      return;
-    }
-
-    const newUser = await User.create({ username });
-
-    res.setCookie('username', username);
-    res.send(newUser);
+    res.setCookie('username', normalizedUsername);
+    res.send(user);
   }
 
   /**
