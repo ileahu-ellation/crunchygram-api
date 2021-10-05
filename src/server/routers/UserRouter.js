@@ -82,7 +82,7 @@ class UserRouter extends Router {
    */
   async getMe(req, res) {
     const { username } = req.cookies;
-    const user = User.find(propEq('username', username));
+    const user = User.instance().find(propEq('username', username));
 
     res.send(user);
   }
