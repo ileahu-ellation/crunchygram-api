@@ -48,12 +48,18 @@ class UserRouter extends Router {
 
     const normalizedUsername = username.toLowerCase();
 
-    const user =
-      User.instance().find(propEq('username', normalizedUsername)) ||
-      (await User.create({ username: normalizedUsername }));
+    const existingUser = User.find(propEq('username', normalizedUsername));
 
     res.setCookie('username', normalizedUsername);
-    res.send(user);
+    if (existingUser) {
+      res.send(existingUser);
+
+      return;
+    }
+
+    const newUser = await User.create({ username: normalizedUsername });
+
+    res.send(newUser);
   }
 
   /**
@@ -80,6 +86,13 @@ class UserRouter extends Router {
     const user = User.instance().find(propEq('username', username));
     console.log('-> getMe user', user);
     console.log('-> username', username);
+
+    setTimeout(() => {
+      console.log(
+        '-> timeout user',
+        User.instance().find(propEq('username', username)),
+      );
+    }, 1000);
 
     res.send(user);
   }
