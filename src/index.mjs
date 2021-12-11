@@ -27,5 +27,5 @@ dotenv.config();
   await lowDB.setup();
   await server.start();
 
-  console.log('\nListening on port', port);
+  console.log(`Listening on http://127.0.0.1:${port}`);
 })();
